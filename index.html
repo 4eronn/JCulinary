@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<title>Japanese Club (日本語部) — Arsip Kenangan Circle</title>
+<meta name="description" content="Arsip kenangan persahabatan anak-anak Japanese Club: Ketemu di kelas bahasa Jepang, bonding-nya malah lewat jajan, main, dan nongkrong bareng.">
+
+<!-- Fonts: Great Vibes (Cursive), Instrument Serif, Onest, Noto Serif JP, Cinzel -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Great+Vibes&family=Instrument+Serif:ital@0;1&family=Noto+Serif+JP:wght@300;400;600;900&family=Onest:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<!-- Three.js Runtime -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+
+<!-- ================= 1. 3D INTRO PORTAL (GAMBAR 1 - CHAIR ON HILL) ================= -->
+<div id="intro-portal">
+  <div class="intro-bg-layer" id="intro-bg-el"></div>
+  <div class="intro-light-glow"></div>
+
+  <!-- 3D Center Typography & Action -->
+  <div class="intro-center">
+    <div class="intro-3d-box" id="intro-3d-box-el">
+      <div class="intro-jp-sub">ようこそ</div>
+      <div class="intro-title-wrap">
+        <div class="intro-welcome-text">
+          WELC<span class="intro-sun-dot">O</span>ME
+        </div>
+      </div>
+      <div class="intro-tag-phrase">TO A CIRCLE LIKE NO OTHER</div>
+      <div class="intro-cursive-japan">Japanese Club</div>
+
+      <div>
+        <button onclick="enterExperience()" class="intro-enter-btn">
+          <i class="fa-solid fa-torii-gate"></i> Buka Arsip Kenangan
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom 3 Columns -->
+  <div class="intro-bottom-cols">
+    <div class="intro-col">
+      <b>Dari Ekskul Jadi Circle</b>
+      <p>Berawal dari Ekstrakulikuler sekolah, jadi circle yang ngumpul sampe sekarang</p>
+    </div>
+    <div class="intro-col">
+      <b>Jajan Club</b>
+      <p>Sekumpulan anak yang suka budaya jepang tapi bukannya belajar tapi jajan mulu</p>
+    </div>
+    <div class="intro-col">
+      <b>Main Tanpa Inget Waktu</b>
+      <p>sekalinya kumpul gak ngeh sama waktu</p>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 2. BACKGROUND 3D & MYSTICAL SUNLIGHT FOREST ================= -->
+<canvas id="gl"></canvas>
+<div class="forest-main-bg" id="forest-bg-el"></div>
+<div class="sunbeams-overlay"></div>
+
+<!-- ================= 3. AUTONOMOUS ROAMING CHIBI COMPANION ================= -->
+<div id="chibi-companion" onclick="petMascot()" title="Klik Chibi Swag!">
+  <div class="chibi-bubble" id="chibi-bubble-el">Yo! Lagi jalan-jalan santai nih~ 🎶</div>
+  <div class="chibi-avatar-wrap" id="chibi-avatar-inner">
+    <img src="mascot-cutout.png" alt="Chibi Companion" class="chibi-img">
+    <div class="chibi-shadow"></div>
+  </div>
+</div>
+
+<!-- Background Audio Element -->
+<audio id="bgm-audio" loop preload="auto">
+  <source src="bgm.mp3" type="audio/mpeg">
+  <source src="YOASOBI 全曲ピアノメドレー【作業用・勉強用BGM】.mp3" type="audio/mpeg">
+  <source src="file:///C:/Users/DELL/Downloads/YOASOBI%20%E5%85%A8%E6%9B%B2%E3%83%94%E3%82%A2%E3%83%8E%E3%83%A1%E3%83%89%E3%83%AC%E3%83%BC%E3%80%90%E4%BD%9C%E6%A5%AD%E7%94%A8%E3%83%BB%E5%8B%89%E5%BC%B7%E7%94%A8BGM%E3%80%91.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Floating Music Player Controller -->
+<div id="audio-player-widget">
+  <button id="music-btn" onclick="toggleAudio()" class="music-toggle-btn" title="Play/Pause BGM">
+    <i id="music-icon" class="fa-solid fa-play"></i>
+  </button>
+  <div class="music-waves paused" id="music-waves-el">
+    <span class="music-bar"></span>
+    <span class="music-bar"></span>
+    <span class="music-bar"></span>
+    <span class="music-bar"></span>
+  </div>
+  <div style="display:flex; flex-direction:column; line-height:1.2;">
+    <span style="font-weight:600; font-size:11.5px; color:#fff;">YOASOBI Piano</span>
+    <span id="music-timer" style="font-size:9.5px; color:var(--gold);">00:00</span>
+  </div>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast">
+  <i class="fa-solid fa-circle-check" style="color:var(--gold);"></i>
+  <span id="toast-msg" style="font-size:13px; font-weight:400;">Notifikasi</span>
+</div>
+
+<!-- ================= 4. MAIN WEBSITE CONTENT ================= -->
+<div class="page">
+  <!-- NAVIGATION -->
+  <header class="nav">
+    <a href="#beranda" class="brand">
+      <div class="brand-icon">友</div>
+      <div class="brand-tx">
+        <b>Japanese Club</b>
+        <i>日本語部 • BELAJAR & JAJAN & MAIN</i>
+      </div>
+    </a>
+
+    <nav class="nav-links">
+      <a href="#beranda" class="nav-link"><i class="fa-solid fa-torii-gate" style="font-size:10px; color:var(--gold);"></i> Beranda</a>
+      <a href="#tentang" class="nav-link"><i class="fa-solid fa-people-group" style="font-size:10px; color:var(--gold);"></i> Asal Usul</a>
+      <a href="#anggota" class="nav-link"><i class="fa-solid fa-users" style="font-size:10px; color:var(--gold);"></i> Anak-anak</a>
+      <a href="#pepatah" class="nav-link"><i class="fa-solid fa-quote-left" style="font-size:10px; color:var(--gold);"></i> Kotowaza</a>
+      <a href="#galeri" class="nav-link">
+        <i class="fa-solid fa-camera-retro" style="font-size:10px; color:var(--gold);"></i> Galeri
+        <span id="nav-lock-badge" style="font-size:9px; padding:2px 6px; border-radius:4px; background:var(--ink); border:1px solid rgba(212,175,55,0.4); color:var(--gold);">72 Item</span>
+      </a>
+      <a href="#pesan" class="nav-link"><i class="fa-solid fa-feather" style="font-size:10px; color:var(--gold);"></i> Pesan</a>
+    </nav>
+
+    <div id="auth-actions">
+      <!-- Injected by JS -->
+    </div>
+  </header>
+
+  <!-- ================= 01 // HERO ================= -->
+  <section id="beranda" class="hero">
+    <div class="hero-main" data-rv>
+      <div class="eyebrow" style="display:flex; align-items:center; gap:8px; margin-bottom:18px;">
+        <span style="width:6px; height:6px; border-radius:50%; background:var(--gold); box-shadow:0 0 10px var(--gold);"></span>
+        Arsip Circle
+      </div>
+      <h1 class="display" style="font-size:clamp(36px, 5.5vw, 72px); margin:0 0 14px; line-height:1.2;">
+        <span class="focus-container" data-sentence="Japanese Culinary" data-blur="4" data-border-color="var(--gold)" data-glow-color="rgba(212, 175, 55, 0.65)" data-duration="0.5" data-pause="1.2">
+          <span class="focus-word active">Japanese</span>
+          <span class="focus-word">Culinary</span>
+          <span class="focus-frame">
+            <span class="corner top-left"></span>
+            <span class="corner top-right"></span>
+            <span class="corner bottom-left"></span>
+            <span class="corner bottom-right"></span>
+          </span>
+        </span>
+        <br>
+        <span class="gold-gradient" style="font-style:italic;">yang Ujungnya Cuma Main & Jajan</span>
+      </h1>
+      <p class="jp" style="font-size:18px; color:var(--gold); letter-spacing:.2em; margin-bottom:20px;">
+        日本語部 — 私たちの絆と思い出の記録
+      </p>
+      <p style="font-size:16px; color:var(--bone-dim); max-width:640px; line-height:1.75; margin-bottom:34px;">
+        Sekumpulan orang yang awalnya dipertemukan oleh klub bahasa Jepang, namun pada akhirnya lebih sering menghabiskan waktu untuk bersenang-senang dan mencicipi berbagai kuliner bersama
+      </p>
+      <div style="display:flex; gap:14px; flex-wrap:wrap;">
+        <a href="#anggota" class="kage-btn-primary"><i class="fa-solid fa-users"></i> Anak-anak Circle</a>
+        <a href="#pepatah" class="kage-btn-secondary"><i class="fa-solid fa-quote-left"></i> Kotowaza Hari Ini</a>
+        <button onclick="handleQuickGalleryClick()" class="kage-btn-secondary"><i class="fa-solid fa-images"></i> Galeri Kenangan</button>
+      </div>
+    </div>
+
+    <div class="hero-side-v">
+      友情の証 • 遊びと絆 • 永遠の仲間
+    </div>
+
+    <!-- Chapter Navigation Grid -->
+    <div data-rv style="margin-top:50px;">
+      <div class="hero-cue">
+        <span>Scroll untuk Nostalgia</span>
+        <div class="track"><i></i></div>
+      </div>
+      <div class="chapters-grid">
+        <a href="#tentang" class="chip">
+          <div class="num">01</div>
+          <div>
+            <b>Kisah Circle</b>
+            <p>Berawal dari kelas bahasa Jepang, berakhir jadi geng yang susah dibubarkan.</p>
+          </div>
+        </a>
+        <a href="#anggota" class="chip">
+          <div class="num">02</div>
+          <div>
+            <b>Anak-anak</b>
+            <p>9 orang, masing-masing punya peran tersendiri saat nongkrong.</p>
+          </div>
+        </a>
+        <a href="#pepatah" class="chip">
+          <div class="num">03</div>
+          <div>
+            <b>Kotowaza</b>
+            <p>30 pepatah Jepang yang kadang jadi alasan buat tetap kumpul.</p>
+          </div>
+        </a>
+        <a href="#galeri" class="chip">
+          <div class="num">04</div>
+          <div>
+            <b>Arsip Galeri</b>
+            <p>Arsip dokumentasi foto dan video kenangan circle.</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 02 // ABOUT ================= -->
+  <section id="tentang" class="sec">
+    <div class="sec-header" data-rv>
+      <h2 class="display sec-title">The Real Story</h2>
+      <p style="color:var(--bone-dim); max-width:620px; margin:0 auto;">Terdaftar sebagai club bahasa Jepang. Berjalan sebagai geng yang susah bubar.</p>
+    </div>
+
+    <div class="about-grid" data-rv>
+      <div class="kage-card" style="padding:clamp(28px, 4vw, 40px);">
+        <div class="eyebrow" style="color:var(--gold); margin-bottom:12px;">ASAL USUL</div>
+        <h3 style="font-family:'Instrument Serif', serif; font-size:clamp(26px, 3.5vw, 32px); margin:0 0 16px;">Ketemu di Kelas, Nongkrong di Mana-mana</h3>
+        <p style="color:var(--bone-dim); font-size:15px; line-height:1.75; margin-bottom:16px;">
+          Awalnya cuma sekumpulan anak yang daftar di club bahasa Jepang. Begitu sesi selesai, pertanyaannya selalu sama: <em style="color:var(--gold);">"Abis ini ke mana dulu?"</em>
+        </p>
+        <p style="color:var(--muted); font-size:14px; line-height:1.7;">
+          Circle ini terbentuk bukan karena nilai Jepang bagus. Tapi karena tiap habis kelas selalu ada yang nyeletuk ngajak jajan, main di rumah seseorang, atau cuma duduk di suatu tempat sampai lupa waktu.
+        </p>
+      </div>
+
+      <div class="kage-card" style="padding:clamp(28px, 4vw, 40px); text-align:center; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+        <div class="hanko-stamp" style="width:90px; height:90px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; margin-bottom:20px;">
+          <span class="jp" style="font-size:14px; font-weight:bold;">友情巡礼</span>
+          <span style="font-size:8px; letter-spacing:.18em;">CIRCLE</span>
+        </div>
+        <h3 style="font-family:'Instrument Serif', serif; font-size:clamp(24px, 3vw, 28px); margin:0 0 10px;">Ilmu Jepang Nol, Teman Banyak</h3>
+        <p style="color:var(--bone-dim); font-size:14px; line-height:1.7; max-width:380px;">
+          "Datang buat belajar bahasa. Bertahan karena susah glekek kalau nggak ada mereka."
+        </p>
+      </div>
+    </div>
+
+    <!-- JICALL (JC CALL) CARD -->
+    <div class="kage-card" style="margin-top:20px; padding:clamp(24px, 3.5vw, 34px); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:24px; border:1px solid rgba(212,175,55,0.4);" data-rv>
+      <div style="max-width:640px;">
+        <div class="eyebrow" style="color:var(--gold); margin-bottom:10px; display:inline-flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-phone-volume"></i> JICALL (JC CALL)
+        </div>
+        <h3 style="font-family:'Instrument Serif', serif; font-size:clamp(24px, 3vw, 30px); margin:0 0 12px; color:#fff;">
+          Ketika Jarak Menjadi Sekat, Ruang Temu Berpindah ke Layar
+        </h3>
+        <p style="color:var(--bone-dim); font-size:14.5px; line-height:1.75; margin:0;">
+          Tidak setiap hari kita bisa duduk di meja yang sama. Saat jarak atau kesibukan membatasi langkah untuk main bareng, obrolan tetap berlanjut lewat <strong>Jicall</strong>. Dari cerita acak sebelum tidur sampai gelak tawa yang terdengar jernih dari balik panggilan suara, jarak tidak pernah benar-benar sanggup memisahkan circle ini.
+        </p>
+      </div>
+      <div style="display:flex; align-items:center; gap:16px; background:rgba(212,175,55,0.06); border:1px solid var(--line-gold); padding:16px 20px; border-radius:16px;">
+        <div style="width:52px; height:52px; border-radius:14px; background:linear-gradient(135deg, #a51d2d, #4e0710); border:1px solid var(--gold); display:flex; align-items:center; justify-content:center; color:var(--gold); font-size:22px; box-shadow:0 0 16px rgba(212,175,55,0.2);">
+          <i class="fa-solid fa-headset"></i>
+        </div>
+        <div style="line-height:1.35;">
+          <b style="font-size:13.5px; color:#fff; display:block;">Panggilan Suara Circle</b>
+          <span style="font-size:11.5px; color:var(--gold);">Jicall Session • Always Connected</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 03 // MEMBERS ================= -->
+  <section id="anggota" class="sec">
+    <div class="sec-header" data-rv>
+      <h2 class="display sec-title">The Squad</h2>
+      <p style="color:var(--bone-dim); max-width:600px; margin:0 auto;">9 orang. Ketemunya di kelas bahasa Jepang. Lebih banyak waktu dihabiskan di luar kelas daripada di dalamnya.</p>
+    </div>
+
+    <!-- Leaders Row (2 Cols) -->
+    <div class="leaders-grid" data-rv>
+      <!-- YASHA: Ketua -->
+      <div class="kage-card member-card border-glow-card" data-glow-colors="#d4af37, #a51d2d, #fbbf24" style="border:1px solid rgba(212,175,55,0.5);">
+        <span class="edge-light"></span>
+        <div class="border-glow-inner">
+          <!-- Photo Frame -->
+          <div class="member-photo-box" onclick="openMemberLightbox('Yasha', 'Ketua Japanese Club', 'moto dewek, simple is the best', 'Asset Foto/Yasha.jpeg')" title="Klik untuk perbesar foto Yasha">
+            <img src="Asset Foto/Yasha.jpeg" alt="Yasha - Ketua Japanese Club" style="object-position: center 20%;">
+            <div class="member-photo-gradient"></div>
+            <div class="member-photo-badge"><i class="fa-solid fa-crown" style="color:var(--gold);"></i> 部長</div>
+            <div class="member-photo-zoom-hint"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+            <div>
+              <span class="eyebrow" style="color:var(--gold);">KETUA / PENGGERAK CIRCLE</span>
+              <h3 style="font-family:'Instrument Serif', serif; font-size:34px; margin:4px 0 0;">Yasha</h3>
+              <span class="jp" style="font-size:12px; color:var(--vermilion);">部長 (Ketua Japanese Club)</span>
+            </div>
+            <div style="width:44px; height:44px; border-radius:10px; background:linear-gradient(135deg, #a51d2d, #4e0710); border:1px solid var(--gold); display:flex; align-items:center; justify-content:center; color:var(--gold); font-size:18px;">
+              <i class="fa-solid fa-crown"></i>
+            </div>
+          </div>
+
+          <div style="font-size:13px; color:var(--gold); font-style:italic; display:flex; align-items:center; gap:6px;">
+            <i class="fa-solid fa-quote-left" style="font-size:11px; opacity:0.85;"></i>
+            <span>moto dewek, simple is the best</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ALEX: Wakil Ketua -->
+      <div class="kage-card member-card border-glow-card" data-glow-colors="#38bdf8, #818cf8, #d4af37" style="border:1px solid rgba(212,175,55,0.4);">
+        <span class="edge-light"></span>
+        <div class="border-glow-inner">
+          <!-- Photo Frame -->
+          <div class="member-photo-box" onclick="openMemberLightbox('Alex', 'Wakil Ketua Japanese Club', 'Untuk meraih mimpimu, jangan pernah berhenti berkembang dan belajar', 'Asset Foto/Alex.jpeg')" title="Klik untuk perbesar foto Alex">
+            <img src="Asset Foto/Alex.jpeg" alt="Alex - Wakil Ketua Japanese Club" style="object-position: center 25%;">
+            <div class="member-photo-gradient"></div>
+            <div class="member-photo-badge"><i class="fa-solid fa-compass" style="color:var(--gold);"></i> 副部長</div>
+            <div class="member-photo-zoom-hint"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+            <div>
+              <span class="eyebrow" style="color:var(--gold);">WAKIL KETUA / NAVIGATOR JALAN-JALAN</span>
+              <h3 style="font-family:'Instrument Serif', serif; font-size:34px; margin:4px 0 0;">Alex</h3>
+              <span class="jp" style="font-size:12px; color:var(--bone-dim);">副部長 (Wakil Ketua)</span>
+            </div>
+            <div style="width:44px; height:44px; border-radius:10px; background:linear-gradient(135deg, #1c222b, #0e1218); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; color:var(--bone); font-size:18px;">
+              <i class="fa-solid fa-compass"></i>
+            </div>
+          </div>
+
+          <div style="font-size:13px; color:var(--gold); font-style:italic; line-height:1.4; display:flex; align-items:flex-start; gap:6px;">
+            <i class="fa-solid fa-quote-left" style="font-size:11px; margin-top:3px; opacity:0.85; flex-shrink:0;"></i>
+            <span>Untuk meraih mimpimu, jangan pernah berhenti berkembang dan belajar</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Core Division Heads (3 Cols) -->
+    <div class="divisions-grid" data-rv>
+      <!-- ILMA: Bendahara -->
+      <div class="kage-card member-card border-glow-card" data-glow-colors="#34d399, #f59e0b, #d4af37">
+        <span class="edge-light"></span>
+        <div class="border-glow-inner">
+          <!-- Photo Frame -->
+          <div class="member-photo-box" onclick="openMemberLightbox('Ilma', 'Bendahara Japanese Club', '-', 'Asset Foto/Ilma.jpeg')" title="Klik untuk perbesar foto Ilma">
+            <img src="Asset Foto/Ilma.jpeg" alt="Ilma - Bendahara" style="object-position: 55% 25%;">
+            <div class="member-photo-gradient"></div>
+            <div class="member-photo-badge"><i class="fa-solid fa-calculator" style="color:var(--gold);"></i> 会計</div>
+            <div class="member-photo-zoom-hint"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+            <div>
+              <span class="eyebrow" style="color:var(--gold);">BENDAHARA / PAWANG DUIT CIRCLE</span>
+              <h3 style="font-family:'Instrument Serif', serif; font-size:28px; margin:2px 0 0;">Ilma</h3>
+              <span class="jp" style="font-size:11px; color:var(--bone-dim);">会計 (Bendahara)</span>
+            </div>
+            <i class="fa-solid fa-calculator" style="color:var(--gold); font-size:20px;"></i>
+          </div>
+
+          <div style="font-size:12px; color:var(--muted); font-style:italic; display:flex; align-items:center; gap:5px;">
+            <i class="fa-solid fa-quote-left" style="font-size:10px; opacity:0.6;"></i>
+            <span>-</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIL: Ketua Divisi -->
+      <div class="kage-card member-card border-glow-card" data-glow-colors="#60a5fa, #38bdf8, #d4af37">
+        <span class="edge-light"></span>
+        <div class="border-glow-inner">
+          <!-- Photo Frame -->
+          <div class="member-photo-box" onclick="openMemberLightbox('Mail', 'Ketua Divisi', 'Menjadi akar yang sunyi, namun menumbuhkan dahan yang tinggi', 'Asset Foto/Mail.jpeg')" title="Klik untuk perbesar foto Mail">
+            <img src="Asset Foto/Mail.jpeg" alt="Mail - Ketua Divisi" style="object-position: center 20%;">
+            <div class="member-photo-gradient"></div>
+            <div class="member-photo-badge"><i class="fa-solid fa-calendar-check" style="color:#60a5fa;"></i> 部門長</div>
+            <div class="member-photo-zoom-hint"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+            <div>
+              <span class="eyebrow" style="color:var(--gold);">KETUA DIVISI / EKSEKUTOR AGENDA</span>
+              <h3 style="font-family:'Instrument Serif', serif; font-size:28px; margin:2px 0 0;">Mail</h3>
+              <span class="jp" style="font-size:11px; color:var(--bone-dim);">部門長 (Ketua Divisi)</span>
+            </div>
+            <i class="fa-solid fa-calendar-check" style="color:#60a5fa; font-size:20px;"></i>
+          </div>
+
+          <div style="font-size:12px; color:var(--gold); font-style:italic; line-height:1.4; display:flex; align-items:flex-start; gap:5px;">
+            <i class="fa-solid fa-quote-left" style="font-size:10px; margin-top:3px; opacity:0.85; flex-shrink:0;"></i>
+            <span>Menjadi akar yang sunyi, namun menumbuhkan dahan yang tinggi</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIGIT: Ketua Divisi -->
+      <div class="kage-card member-card border-glow-card" data-glow-colors="#ef4444, #f97316, #d4af37">
+        <span class="edge-light"></span>
+        <div class="border-glow-inner">
+          <!-- Photo Frame -->
+          <div class="member-photo-box" onclick="openMemberLightbox('Sigit', 'Anggota Japanese Club', 'Jangan percaya siapapun kecuali diri sendiri', 'Asset Foto/Sigit.jpeg')" title="Klik untuk perbesar foto Sigit">
+            <img src="Asset Foto/Sigit.jpeg" alt="Sigit - Anggota" style="object-position: center 20%;">
+            <div class="member-photo-gradient"></div>
+            <div class="member-photo-badge"><i class="fa-solid fa-fire" style="color:var(--gold);"></i> 元気者</div>
+            <div class="member-photo-zoom-hint"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+            <div>
+              <span class="eyebrow" style="color:var(--gold);">ANGGOTA / ENERGI MEJA MAKAN</span>
+              <h3 style="font-family:'Instrument Serif', serif; font-size:28px; margin:2px 0 0;">Sigit</h3>
+              <span class="jp" style="font-size:11px; color:var(--vermilion);">元気者 (Si Bersemangat)</span>
+            </div>
+            <i class="fa-solid fa-fire" style="color:var(--gold); font-size:20px;"></i>
+          </div>
+
+          <div style="font-size:12px; color:var(--gold); font-style:italic; line-height:1.4; display:flex; align-items:flex-start; gap:5px;">
+            <i class="fa-solid fa-quote-left" style="font-size:10px; margin-top:3px; opacity:0.85; flex-shrink:0;"></i>
+            <span>Jangan percaya siapapun kecuali diri sendiri</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Members Row (4 Cols) -->
+    <div class="members-subgrid" data-rv>
+      <!-- SHAFIRA -->
+      <div class="kage-card member-card border-glow-card" data-glow-colors="#f472b6, #fb7185, #d4af37" style="padding:20px;">
+        <span class="edge-light"></span>
+        <div class="border-glow-inner">
+          <!-- Photo Frame -->
+          <div class="member-photo-box" onclick="openMemberLightbox('Shafira', 'Anggota Japanese Club', 'rasa sakit dan kegagalan adalah pengajar dan pelajaran yang terbaik', 'Asset Foto/Shafira.jpeg')" title="Klik untuk perbesar foto Shafira">
+            <img src="Asset Foto/Shafira.jpeg" alt="Shafira - Anggota" style="object-position: center 20%;">
+            <div class="member-photo-gradient"></div>
+            <div class="member-photo-badge"><i class="fa-solid fa-ice-cream" style="color:#f472b6;"></i> 甘味</div>
+            <div class="member-photo-zoom-hint"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <h4 style="font-family:'Instrument Serif', serif; font-size:24px; margin:0;">Shafira</h4>
+            <span style="font-size:11px; color:var(--gold);">部員 (Anggota)</span>
+          </div>
+
+          <div style="font-size:11.5px; color:var(--gold); font-style:italic; display:flex; align-items:flex-start; gap:4px; line-height:1.4;">
+            <i class="fa-solid fa-quote-left" style="font-size:9px; margin-top:3px; opacity:0.85; flex-shrink:0;"></i>
+            <span>rasa sakit dan kegagalan adalah pengajar dan pelajaran yang terbaik</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AMEL -->
+      <div class="kage-card member-card border-glow-card" data-glow-colors="#c084fc, #a855f7, #d4af37" style="padding:20px;">
+        <span class="edge-light"></span>
+        <div class="border-glow-inner">
+          <!-- Photo Frame -->
+          <div class="member-photo-box" onclick="openMemberLightbox('Amel', 'Anggota Japanese Club', 'Enjoy your life', 'Asset Foto/Amel.jpeg')" title="Klik untuk perbesar foto Amel">
+            <img src="Asset Foto/Amel.jpeg" alt="Amel - Anggota" style="object-position: center 20%;">
+            <div class="member-photo-gradient"></div>
+            <div class="member-photo-badge"><i class="fa-solid fa-camera" style="color:#c084fc;"></i> 写楽</div>
+            <div class="member-photo-zoom-hint"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <h4 style="font-family:'Instrument Serif', serif; font-size:24px; margin:0;">Amel</h4>
+            <span style="font-size:11px; color:var(--gold);">部員 (Anggota)</span>
+          </div>
+
+          <div style="font-size:11.5px; color:var(--gold); font-style:italic; display:flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-quote-left" style="font-size:9px; opacity:0.85;"></i>
+            <span>Enjoy your life</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ZAHWA -->
+      <div class="kage-card member-card border-glow-card" data-glow-colors="#34d399, #2dd4bf, #d4af37" style="padding:20px;">
+        <span class="edge-light"></span>
+        <div class="border-glow-inner">
+          <!-- Photo Frame -->
+          <div class="member-photo-box" onclick="openMemberLightbox('Zahwa', 'Anggota Japanese Club', '-', 'Asset Foto/Zahwa.jpeg')" title="Klik untuk perbesar foto Zahwa">
+            <img src="Asset Foto/Zahwa.jpeg" alt="Zahwa - Anggota" style="object-position: center 25%;">
+            <div class="member-photo-gradient"></div>
+            <div class="member-photo-badge"><i class="fa-solid fa-star" style="color:#34d399;"></i> 冒険家</div>
+            <div class="member-photo-zoom-hint"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <h4 style="font-family:'Instrument Serif', serif; font-size:24px; margin:0;">Zahwa</h4>
+            <span style="font-size:11px; color:var(--gold);">部員 (Anggota)</span>
+          </div>
+
+          <div style="font-size:11.5px; color:var(--muted); font-style:italic; display:flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-quote-left" style="font-size:9px; opacity:0.6;"></i>
+            <span>-</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- KEVIN -->
+      <div class="kage-card member-card border-glow-card" data-glow-colors="#fbbf24, #a51d2d, #d4af37" style="padding:20px;">
+        <span class="edge-light"></span>
+        <div class="border-glow-inner">
+          <!-- Photo Frame (Anime Persona Mascot) -->
+          <div class="member-photo-box" onclick="openMemberLightbox('Kevin', 'Anggota Japanese Club', '-', 'mascot-cutout.png')" title="Klik untuk perbesar avatar Kevin" style="background: radial-gradient(circle at center, rgba(165,29,45,0.25) 0%, #030805 75%);">
+            <img src="mascot-cutout.png" alt="Kevin - Anggota" style="object-fit:contain; padding:18px; filter:drop-shadow(0 6px 14px rgba(0,0,0,0.8));">
+            <div class="member-photo-gradient"></div>
+            <div class="member-photo-badge"><i class="fa-solid fa-gamepad" style="color:#fbbf24;"></i> アニメ</div>
+            <div class="member-photo-zoom-hint"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <h4 style="font-family:'Instrument Serif', serif; font-size:24px; margin:0;">Kevin</h4>
+            <span style="font-size:11px; color:var(--gold);">部員 (Anggota)</span>
+          </div>
+
+          <div style="font-size:11.5px; color:var(--muted); font-style:italic; display:flex; align-items:center; gap:4px;">
+            <i class="fa-solid fa-quote-left" style="font-size:9px; opacity:0.6;"></i>
+            <span>-</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 04 // KOTOWAZA ================= -->
+  <section id="pepatah" class="sec">
+    <div class="sec-header" data-rv>
+      <span class="eyebrow">03 // Daily Wisdom</span>
+      <h2 class="display sec-title">Semangat Hari Ini (今日のことわざ)</h2>
+      <p style="color:var(--bone-dim); max-width:600px; margin:0 auto;">30 pepatah Jepang yang sering kami jadikan alasan buat nongkrong, jajan, dan main lagi.</p>
+    </div>
+
+    <div class="kage-card kotowaza-box" data-rv>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; border-bottom:1px solid var(--line-gold); padding-bottom:16px;">
+        <span class="eyebrow" style="color:var(--gold);">Pepatah #<span id="kw-index">1</span> / 30 Koleksi</span>
+        <div class="hanko-stamp" style="padding:3px 10px; font-size:11px; font-weight:bold; border-radius:4px;">
+          <span class="jp">名言</span> MEIGEN
+        </div>
+      </div>
+
+      <div style="margin:20px 0 34px;">
+        <div id="kw-kanji" class="jp" style="font-size:clamp(32px, 5.2vw, 56px); font-weight:600; color:#fff; line-height:1.2; margin-bottom:8px;">
+          七転び八起き
+        </div>
+        <div id="kw-romaji" style="font-family:'Instrument Serif', serif; font-style:italic; font-size:20px; color:var(--gold); letter-spacing:.12em;">
+          Nanakorobi yaoki
+        </div>
+      </div>
+
+      <div style="background:rgba(4,10,6,0.75); padding:24px 30px; border-radius:16px; border:1px solid var(--line-gold); max-width:680px; margin:0 auto 30px;">
+        <p id="kw-meaning" style="font-size:16px; color:var(--bone); line-height:1.7; margin:0; font-weight:300;">
+          "Jatuh tujuh kali, bangkit delapan kali. Pantang menyerah menghadapi rintangan; kalau hari ini capek belajar Kanji, besok kita obati dengan nongkrong bareng circle sambil jajan."
+        </p>
+      </div>
+
+      <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap;">
+        <button onclick="shuffleKotowaza()" class="kage-btn-primary"><i class="fa-solid fa-shuffle"></i> Acak Pepatah Lainnya</button>
+        <button onclick="copyKotowaza()" class="kage-btn-secondary"><i class="fa-solid fa-copy"></i> Salin Pepatah</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 05 // GALLERY (LOCKED / UNLOCKED) ================= -->
+  <section id="galeri" class="sec">
+    <div class="sec-header" data-rv>
+      <span class="eyebrow">04 // Secret Memories</span>
+      <h2 class="display sec-title">Galeri Kenangan Circle</h2>
+      <p style="color:var(--bone-dim); max-width:600px; margin:0 auto;">Dokumentasi momen main bareng, jajan keliling kota, dan nongkrong tak terlupakan Japanese Club.</p>
+    </div>
+
+    <!-- LOCKED STATE (Before Login) -->
+    <div id="gallery-locked" class="kage-card" style="background:#06140d; border:1px solid var(--gold); padding:clamp(40px, 8vw, 70px) 28px; border-radius:24px; text-align:center; max-width:680px; margin:0 auto; box-shadow:0 24px 60px rgba(0,0,0,0.95), 0 0 30px rgba(212,175,55,0.15);">
+      <div style="width:68px; height:68px; border-radius:18px; background:linear-gradient(135deg, #a51d2d, #3c040a); border:1px solid var(--gold); display:flex; align-items:center; justify-content:center; margin:0 auto 24px; font-size:26px; color:var(--gold);">
+        <i class="fa-solid fa-lock"></i>
+      </div>
+      <h3 style="font-family:'Instrument Serif', serif; font-size:34px; margin:0 0 12px; color:#fff;">Arsip Khusus Anak Circle</h3>
+      <p style="color:var(--bone-dim); font-size:15px; line-height:1.7; margin-bottom:30px;">
+        Dokumentasi momen kebersamaan circle (72 foto & video stories). Masuk dengan akun circle kamu untuk membuka arsip kenangan.
+      </p>
+      <button onclick="openLoginModal()" class="kage-btn-primary" style="padding:14px 32px; font-size:14px;">
+        <i class="fa-solid fa-unlock-keyhole"></i> Buka Kunci Galeri
+      </button>
+    </div>
+
+    <!-- UNLOCKED STATE (After Login) -->
+    <div id="gallery-unlocked" class="gallery-solid-wrapper" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:14px; background:rgba(6, 78, 59, 0.45); border:1px solid rgba(52, 211, 153, 0.4); padding:16px 24px; border-radius:16px;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <i class="fa-solid fa-camera-retro" style="color:#34d399; font-size:20px;"></i>
+          <div>
+            <b style="font-size:14px; color:#fff;">Arsip Stories & Galeri Circle</b>
+            <span style="font-size:12px; color:#a7f3d0; display:block;">foto & video kenangan Japanese Club dari folder Foto Galeri.</span>
+          </div>
+        </div>
+        <span style="font-size:11px; background:var(--ink); padding:6px 12px; border-radius:8px; border:1px solid rgba(52,211,153,0.4); color:#34d399;">
+          <i class="fa-solid fa-user-check"></i> Sesi Circle Aktif
+        </span>
+      </div>
+
+      <!-- Controls & Filter Tabs -->
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" onclick="filterGallery('all', this)" class="kage-btn-primary gallery-filter-btn active" style="padding:7px 16px; font-size:12px; border-radius:20px;"><i class="fa-solid fa-layer-group"></i> Semua (72)</button>
+          <button type="button" onclick="filterGallery('KUMPUL CIRCLE', this)" class="kage-btn-secondary gallery-filter-btn" style="padding:7px 16px; font-size:12px; border-radius:20px;"><i class="fa-solid fa-users"></i> Kumpul Circle (42)</button>
+          <button type="button" onclick="filterGallery('SESI KEGIATAN', this)" class="kage-btn-secondary gallery-filter-btn" style="padding:7px 16px; font-size:12px; border-radius:20px;"><i class="fa-solid fa-camera"></i> Sesi Kegiatan (24)</button>
+          <button type="button" onclick="filterGallery('video', this)" class="kage-btn-secondary gallery-filter-btn" style="padding:7px 16px; font-size:12px; border-radius:20px;"><i class="fa-solid fa-circle-play"></i> Video (6)</button>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button type="button" id="view-mode-coverflow-btn" onclick="setGalleryViewMode('coverflow')" class="kage-btn-primary" style="padding:6px 14px; font-size:11.5px; border-radius:12px;" title="Tampilan 3D Coverflow"><i class="fa-solid fa-cubes-stacked"></i> 3D Coverflow</button>
+          <button type="button" id="view-mode-grid-btn" onclick="setGalleryViewMode('grid')" class="kage-btn-secondary" style="padding:6px 14px; font-size:11.5px; border-radius:12px;" title="Tampilan Grid"><i class="fa-solid fa-table-cells"></i> Grid</button>
+        </div>
+      </div>
+
+      <!-- 3D Coverflow View -->
+      <div id="gallery-coverflow-container" class="coverflow-wrapper">
+        <div class="coverflow-stage" id="cf-stage" tabindex="0">
+          <button type="button" class="coverflow-nav-btn coverflow-nav-prev" onclick="coverflowNudge(-1)" aria-label="Sebelumnya"><i class="fa-solid fa-chevron-left"></i></button>
+          <button type="button" class="coverflow-nav-btn coverflow-nav-next" onclick="coverflowNudge(1)" aria-label="Selanjutnya"><i class="fa-solid fa-chevron-right"></i></button>
+          <div class="coverflow-track" id="cf-track">
+            <!-- Rendered by JS as 3D Coverflow Slides -->
+          </div>
+        </div>
+        <div class="coverflow-controls-row">
+          <span class="coverflow-instruction"><i class="fa-solid fa-arrows-left-right"></i> Geser / Klik / Gunakan tombol panah keyboard</span>
+          <span id="cf-counter" class="coverflow-counter-badge">Slide 1 / 72</span>
+        </div>
+      </div>
+
+      <!-- Grid View (Optional Toggle) -->
+      <div class="gallery-stories-grid" id="gallery-container" style="display:none;">
+        <!-- Rendered by JS as Stories Cards -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 06 // GUESTBOOK ================= -->
+  <section id="pesan" class="sec">
+    <div class="sec-header" data-rv>
+      <span class="eyebrow">05 // Circle Memory Wall</span>
+      <h2 class="display sec-title">Papan Kesan & Cerita Nongkrong</h2>
+      <p style="color:var(--bone-dim); max-width:600px; margin:0 auto;">Semua orang bisa baca serunya cerita kita. Masuk untuk ninggalin jejak pesanmu!</p>
+    </div>
+
+    <div class="guestbook-layout" data-rv>
+      <!-- Form Box -->
+      <div>
+        <!-- Form Locked (Clean) -->
+        <div id="msg-form-locked" class="kage-card" style="padding:36px; border-radius:20px; text-align:center;">
+          <div style="width:54px; height:54px; border-radius:14px; background:var(--ink); border:1px solid var(--vermilion); display:flex; align-items:center; justify-content:center; margin:0 auto 18px; font-size:20px; color:var(--gold);">
+            <i class="fa-solid fa-feather-pointed"></i>
+          </div>
+          <h3 style="font-family:'Instrument Serif', serif; font-size:28px; margin:0 0 10px;">Mau Nulis Kesan & Pesan?</h3>
+          <p style="color:var(--bone-dim); font-size:14px; line-height:1.65; margin-bottom:24px;">
+            Biar nggak ada pesan spam, formulir ini hanya bisa diisi setelah login dengan akun circle.
+          </p>
+          <button onclick="openLoginModal()" class="kage-btn-primary" style="width:100%;">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> Login untuk Menulis
+          </button>
+        </div>
+
+        <!-- Form Active (When Logged In) -->
+        <div id="msg-form-unlocked" class="kage-card" style="display:none; padding:36px; border-radius:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid var(--line-gold); padding-bottom:12px;">
+            <h3 style="font-family:'Instrument Serif', serif; font-size:26px; margin:0;">Tulis Cerita Kenangan</h3>
+            <span style="font-size:10px; color:#34d399; background:rgba(6,78,59,0.4); padding:3px 8px; border-radius:6px;">Member Mode</span>
+          </div>
+
+          <form onsubmit="handleMessageSubmit(event)" style="display:flex; flex-direction:column; gap:16px;">
+            <div>
+              <label style="display:block; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--bone-dim); margin-bottom:6px;">Nama / Panggilan *</label>
+              <input type="text" id="msg-name" required placeholder="Nama Anda" class="kage-input">
+            </div>
+
+            <div>
+              <label style="display:block; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--bone-dim); margin-bottom:6px;">Peran / Status Circle *</label>
+              <input type="text" id="msg-role" required placeholder="Contoh: Pecinta Ramen / Alumni Nongkrong" class="kage-input">
+            </div>
+
+            <div>
+              <label style="display:block; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--bone-dim); margin-bottom:6px;">Tag Cerita</label>
+              <select id="msg-tag" class="kage-input">
+                <option value="Ramen & Jajan">🍜 Cerita Ramen & Jajanan</option>
+                <option value="Nostalgia">🌸 Nostalgia & Kenangan Seru</option>
+                <option value="Kocak">😂 Momen Aib & Ngakak di Kedai</option>
+                <option value="Terima Kasih">🙏 Makasih Buat Kebersamaannya</option>
+              </select>
+            </div>
+
+            <div>
+              <label style="display:block; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--bone-dim); margin-bottom:6px;">Isi Pesan & Kesan *</label>
+              <textarea id="msg-content" required rows="4" placeholder="Tulis kenangan jajan bareng, momen lucu pas split bill, atau doa terbaikmu..." class="kage-input" style="resize:vertical;"></textarea>
+            </div>
+
+            <button type="submit" class="kage-btn-primary" style="width:100%; margin-top:8px;">
+              <i class="fa-solid fa-paper-plane"></i> Kirim Pesan
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Messages Stream -->
+      <div style="display:flex; flex-direction:column; gap:18px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 20px; background:rgba(255,255,255,0.04); border:1px solid var(--line-gold); border-radius:14px;">
+          <span style="font-size:13px; color:var(--bone-dim);">Total Cerita: <strong id="msg-count" style="color:var(--gold);">5</strong></span>
+          <span style="font-size:11px; color:var(--muted);"><i class="fa-solid fa-globe"></i> Terbuka untuk dibaca umum</span>
+        </div>
+
+        <div id="messages-stream" style="display:flex; flex-direction:column; gap:16px;">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 07 // STICKY & REVEAL FOOTER ================= -->
+  <footer class="sticky-footer-wrap">
+    <!-- Ambient glowing aura layers -->
+    <div class="sticky-footer-aura" aria-hidden="true">
+      <div class="sticky-footer-aura-1"></div>
+      <div class="sticky-footer-aura-2"></div>
+    </div>
+
+    <div class="sticky-footer-content">
+      <div class="sticky-footer-grid">
+        <!-- Brand Column -->
+        <div class="footer-brand-col">
+          <div class="footer-brand-logo">
+            <div class="footer-hanko">結</div>
+            <div>
+              <h3 class="footer-brand-title">JAPANESE CLUB</h3>
+              <span class="jp" style="font-size:12px; color:var(--gold);">日本語部 • 絆と記録</span>
+            </div>
+          </div>
+          <div class="footer-brand-tagline">
+            "Dari Kelas Bahasa ke Kenangan Seumur Hidup"
+          </div>
+          <p class="footer-brand-desc">
+            Arsip kebersamaan, cerita santai, dan keseruan nongkrong circle Japanese Club bersama Yasha, Alex, Ilma, Mail, Sigit, Shafira, Amel, Zahwa, dan Kevin.
+          </p>
+          <div class="footer-social-row">
+            <a href="https://www.instagram.com/_jikoo0ol/" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="Instagram @_jikoo0ol" aria-label="Instagram @_jikoo0ol">
+              <i class="fa-brands fa-instagram"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Link Group 1: Eksplorasi -->
+        <div class="footer-link-col">
+          <h4><i class="fa-solid fa-compass" style="color:var(--gold);"></i> Eksplorasi</h4>
+          <ul class="footer-link-list">
+            <li><a href="#beranda"><i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> Beranda Utama</a></li>
+            <li><a href="#tentang"><i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> Kisah Circle</a></li>
+            <li><a href="#anggota"><i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> Anak-anak Circle</a></li>
+            <li><a href="#pepatah"><i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> Kotowaza Hari Ini</a></li>
+            <li><a href="#galeri"><i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> Arsip Galeri</a></li>
+            <li><a href="#pesan"><i class="fa-solid fa-chevron-right" style="font-size:9px;"></i> Papan Kesan</a></li>
+          </ul>
+        </div>
+
+        <!-- Link Group 2: The Squad -->
+        <div class="footer-link-col">
+          <h4><i class="fa-solid fa-users" style="color:var(--gold);"></i> The Squad</h4>
+          <ul class="footer-link-list">
+            <li><a href="#anggota"><i class="fa-solid fa-crown" style="font-size:9px; color:var(--gold);"></i> Yasha (Ketua)</a></li>
+            <li><a href="#anggota"><i class="fa-solid fa-compass" style="font-size:9px;"></i> Alex (Wakil)</a></li>
+            <li><a href="#anggota"><i class="fa-solid fa-calculator" style="font-size:9px;"></i> Ilma (Bendahara)</a></li>
+            <li><a href="#anggota"><i class="fa-solid fa-calendar-check" style="font-size:9px;"></i> Mail (Ketua Divisi)</a></li>
+            <li><a href="#anggota"><i class="fa-solid fa-fire" style="font-size:9px;"></i> Sigit (Anggota)</a></li>
+            <li><a href="#anggota"><i class="fa-solid fa-heart" style="font-size:9px;"></i> Shafira, Amel, Zahwa, Kevin</a></li>
+          </ul>
+        </div>
+
+        <!-- Link Group 3: Fitur Spesial -->
+        <div class="footer-link-col">
+          <h4><i class="fa-solid fa-wand-magic-sparkles" style="color:var(--gold);"></i> Interaksi</h4>
+          <ul class="footer-link-list">
+            <li><a href="#galeri"><i class="fa-solid fa-cubes-stacked" style="font-size:9px;"></i> 3D Coverflow Galeri</a></li>
+            <li><a href="javascript:void(0)" onclick="toggleAudio()"><i class="fa-solid fa-music" style="font-size:9px;"></i> BGM Lofi Player</a></li>
+            <li><a href="javascript:void(0)" onclick="petMascot()"><i class="fa-solid fa-face-smile" style="font-size:9px;"></i> Maskot Chibi</a></li>
+            <li><a href="javascript:void(0)" onclick="shuffleKotowaza()"><i class="fa-solid fa-shuffle" style="font-size:9px;"></i> Acak Pepatah Jepang</a></li>
+            <li><a href="#tentang"><i class="fa-solid fa-phone-volume" style="font-size:9px;"></i> JICALL Room</a></li>
+          </ul>
+        </div>
+
+        <!-- Link Group 4: Member VIP -->
+        <div class="footer-link-col">
+          <h4><i class="fa-solid fa-shield-halved" style="color:var(--gold);"></i> Member Area</h4>
+          <ul class="footer-link-list">
+            <li><a href="dashboard.html"><i class="fa-solid fa-gauge-high" style="font-size:9px; color:#34d399;"></i> VIP Dashboard</a></li>
+            <li><a href="javascript:void(0)" onclick="openLoginModal()"><i class="fa-solid fa-arrow-right-to-bracket" style="font-size:9px;"></i> Masuk Akun Circle</a></li>
+            <li><a href="#galeri"><i class="fa-solid fa-images" style="font-size:9px;"></i> Buka Kunci Galeri</a></li>
+            <li><a href="#pesan"><i class="fa-solid fa-feather-pointed" style="font-size:9px;"></i> Tulis Cerita Baru</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Bottom Credits -->
+      <div class="sticky-footer-bottom">
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <span>&copy;© 2026 Japanese Culinary. all rights reserved</span>
+        </div>
+        <div class="jp" style="color:var(--gold); font-size:13px; letter-spacing:.05em;">
+          <i class="fa-solid fa-heart" style="color:var(--vermilion); font-size:11px; margin-right:4px;"></i> ありがとう、この仲間に出会えて
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ================= 5. LOGIN MODAL WITH MEME REACTIONS ================= -->
+<div id="login-modal" class="kage-modal">
+  <div class="modal-dialog">
+    <!-- Mascot on Top of Login Box -->
+    <div class="login-mascot-wrap" id="login-mascot-wrap-el">
+      <div class="login-mascot-bubble" id="mascot-bubble-text">Yo! Masuk akun circle ya 😎</div>
+      <div class="happy-sparkles">
+        <i class="fa-solid fa-star" style="color:var(--gold); position:absolute; top:-6px; left:8px; font-size:16px;"></i>
+        <i class="fa-solid fa-heart" style="color:#f43f5e; position:absolute; top:2px; right:4px; font-size:16px;"></i>
+        <i class="fa-solid fa-wand-magic-sparkles" style="color:#38bdf8; position:absolute; bottom:8px; left:-6px; font-size:16px;"></i>
+      </div>
+
+      <!-- Mascot Image Card -->
+      <div class="login-mascot-img-box">
+        <img src="mascot-cutout.png" alt="Login Mascot" class="login-mascot-img" id="login-mascot-img-el">
+      </div>
+    </div>
+
+    <button onclick="closeLoginModal()" style="position:absolute; top:18px; right:18px; font-size:18px; color:var(--muted); cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+    <div style="text-align:center; margin-bottom:14px;">
+      <h3 id="auth-modal-title" style="font-family:'Instrument Serif',serif; font-size:26px; margin:0 0 6px;">Masuk Akun Circle</h3>
+      <p id="auth-modal-sub" style="font-size:12.5px; color:var(--bone-dim); margin:6px 0 0;">Silakan masukkan username/email dan kata sandi Anda.</p>
+    </div>
+
+    <form id="circle-login-form" onsubmit="handleAccountLoginSubmit(event)" style="display:flex; flex-direction:column; gap:14px;">
+      <!-- Error notification box -->
+      <div id="login-error" style="display:none; padding:12px 14px; background:rgba(224,35,28,0.18); border:1px solid var(--vermilion); border-radius:12px; font-size:12.5px; color:#ff8585; line-height:1.5;">
+        <i class="fa-solid fa-circle-exclamation"></i> <span id="login-error-text">Username atau password salah.</span>
+      </div>
+
+      <div>
+        <label for="login-username" id="label-username" style="display:block; font-size:11px; letter-spacing:0.1em; color:var(--gold); margin-bottom:6px; font-weight:600; text-transform:uppercase;">Username / Email</label>
+        <div style="position:relative;">
+          <i class="fa-solid fa-user" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:13px;"></i>
+          <input type="text" id="login-username" required placeholder="Masukkan username atau email" class="kage-input" style="padding-left:38px;" autocomplete="username">
+        </div>
+      </div>
+
+      <div>
+        <label for="login-password" style="display:block; font-size:11px; letter-spacing:0.1em; color:var(--gold); margin-bottom:6px; font-weight:600; text-transform:uppercase;">Password</label>
+        <div style="position:relative;">
+          <i class="fa-solid fa-lock" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:13px;"></i>
+          <input type="password" id="login-password" required placeholder="Masukkan password" class="kage-input" style="padding-left:38px; padding-right:38px;" autocomplete="current-password">
+          <button type="button" onclick="togglePasswordVisibility()" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:13px; cursor:pointer;" title="Lihat/Sembunyikan password">
+            <i class="fa-solid fa-eye" id="toggle-pwd-icon"></i>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" id="login-submit-btn" class="kage-btn-primary" style="width:100%; justify-content:center; padding:12px; font-size:13.5px; margin-top:6px;">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i> <span id="auth-submit-label">Masuk Sekarang</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ================= LIGHTBOX MODAL ================= -->
+<div id="lightbox-modal" class="kage-modal">
+  <div class="modal-dialog" style="max-width:760px; padding:24px;">
+    <button onclick="closeLightbox()" style="position:absolute; top:18px; right:18px; z-index:10; font-size:18px; color:#fff; background:rgba(0,0,0,0.6); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-xmark"></i></button>
+    <div id="lightbox-img-wrap" style="width:100%; max-height:55vh; overflow:hidden; border-radius:14px; margin-bottom:18px; background:#000;"></div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+      <span id="lb-cat" class="eyebrow" style="color:var(--gold);">KATEGORI</span>
+      <span id="lb-date" style="font-size:12px; color:var(--muted);">Tanggal</span>
+    </div>
+    <h4 id="lb-title" style="font-family:'Instrument Serif',serif; font-size:26px; margin:0 0 8px;">Judul Foto</h4>
+    <p id="lb-desc" style="font-size:14px; color:var(--bone-dim); line-height:1.6; margin:0;"></p>
+  </div>
+</div>
+
+<!-- ================= JAVASCRIPT STATE, AUDIO, CHIBI & 3D ENGINE ================= -->
+<script src="js/script.js"></script>
+
+</body>
+</html>
+
